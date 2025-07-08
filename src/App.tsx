@@ -1,7 +1,15 @@
+import { useMemo } from "react"
+import { useBudget } from "./hooks/useBudget"
 import BudgetForm from "./components/BudgetForm"
+import BudgetTracker from "./components/BudgetTracker"
+import ExpenseModal from "./components/ExpenseModal"
 
 function App() {
  
+  const {state} = useBudget()
+
+  const isValidBudget = useMemo(()=> state.budget > 0 ,[state.budget])
+
 
   return (
     <>
@@ -11,8 +19,15 @@ function App() {
 
       <main>
         <section className="max-w-3xl mx-auto bg-gray-100 shadow-lg rounded-lg mt-10 p-10">
-          <BudgetForm />
+          {/* Se invoca el componente si el presupuesto está ingresado o no */}
+          {isValidBudget ? <BudgetTracker /> : <BudgetForm />}
         </section>
+
+        <article className="max-w-3xl mx-auto ">
+
+          {/* Es como un ternario pero donde solo funciona con un true, no tiene opción para false */}
+          {isValidBudget && <ExpenseModal /> }
+        </article>
 
       </main>
     </>
