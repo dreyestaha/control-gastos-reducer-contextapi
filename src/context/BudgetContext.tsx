@@ -1,6 +1,7 @@
 import { createContext, useReducer, type Dispatch, type ReactNode } from "react"
 import { budgetReducer, initialState, type BudgetActions, type BudgetState } from "../reducers/budgetReducer"
 
+
 type BudgetContextProps = {
     state: BudgetState
     dispatch: Dispatch<BudgetActions>
