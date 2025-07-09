@@ -3,6 +3,7 @@ import { useBudget } from "./hooks/useBudget"
 import BudgetForm from "./components/BudgetForm"
 import BudgetTracker from "./components/BudgetTracker"
 import ExpenseModal from "./components/ExpenseModal"
+import ExpenseList from "./components/ExpenseList"
 
 function App() {
  
@@ -23,11 +24,11 @@ function App() {
           {isValidBudget ? <BudgetTracker /> : <BudgetForm />}
         </section>
 
-        <article className="max-w-3xl mx-auto ">
-
-          {/* Es como un ternario pero donde solo funciona con un true, no tiene opción para false */}
-          {isValidBudget && <ExpenseModal /> }
-        </article>
+        {/* Es como un ternario pero donde solo funciona con un true, no tiene opción para false */}
+        {isValidBudget && (<section className="max-w-3xl mx-auto ">
+          <ExpenseList/>        
+          <ExpenseModal /> 
+        </section>)}
 
       </main>
     </>
