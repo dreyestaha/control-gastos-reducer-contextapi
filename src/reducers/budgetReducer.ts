@@ -7,19 +7,36 @@ export type BudgetActions =
         , payload: {budget: number}} |
     {type:"show-modal"} |
     {type:"hide-modal"} |
-    {type:"add-expense", payload: {expense: DraftExpense}} 
+    {type:"add-expense", payload: {expense: DraftExpense}} |
+    {type:"remove-expense", payload: {id: Expense["id"]}} |
+    {type:"get-expense-by-id", payload: {id: Expense["id"]}} |
+    {type:"update-expense", payload: {expense: Expense}} 
 
 
 export type BudgetState = {
     budget: number
     modal: boolean
     expenses: Expense[]
+    editingId: Expense["id"]
 }
 
+//funciones para tener local storage
+const budgetInitialState = () : number  =>{
+    const localStorageBudget = localStorage.getItem("budget");
+    return localStorageBudget ? +localStorageBudget : 0
+}
+
+const expensesInitialState = (): Expense[] =>{
+    const localStorageExpenses = localStorage.getItem("expenses");
+    return localStorageExpenses ? JSON.parse(localStorageExpenses) : []
+}
+
+//Initial state de la app
 export const initialState : BudgetState = {
-    budget: 0,
+    budget: budgetInitialState(),
     modal: false,
-    expenses: []
+    expenses: expensesInitialState(),
+    editingId: ""
 } 
 
 //para transformar el draftExpense a un expense con ID. 
@@ -53,7 +70,8 @@ export const budgetReducer = (
         if(action.type === "hide-modal"){
             return {
                 ...state,
-                modal: false
+                modal: false,
+                editingId: ""
             }
         }
 
@@ -64,6 +82,31 @@ export const budgetReducer = (
                 expenses: [...state.expenses, newExpense],
                 //cerramos la modal luego de agregar el gasto
                 modal:false
+            }
+        }
+
+        if(action.type === "remove-expense"){
+            return{
+                ...state,
+                expenses: state.expenses.filter(expense => expense.id !== action.payload.id)
+            }
+        }
+
+        if(action.type === "get-expense-by-id"){
+            return{
+                ...state,
+                editingId: action.payload.id,
+                //para que se muestra la modal cuando editemos un gasto
+                modal:true
+            }
+        }
+
+        if(action.type === "update-expense"){
+            return{
+                ...state,
+                expenses: state.expenses.map(expense=> expense.id === action.payload.expense.id ? action.payload.expense : expense),
+                modal:false,
+                editingId: ""
             }
         }
 
